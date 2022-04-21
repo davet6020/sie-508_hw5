@@ -1,0 +1,6 @@
+name,price,quantity
+bread,2.5,20
+milk,4.0,10
+eggs,4.0,5
+juice,5.75,10
+cake,10.0,2
