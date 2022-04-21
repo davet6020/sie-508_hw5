@@ -34,7 +34,12 @@ class ModelBasic(object):
         return basic_backend.read_item(name)
 
     def read_items(self):
-        return basic_backend.read_items()
+        try:
+            return basic_backend.read_items()
+        except BaseException as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            raise
+
 
     def update_item(self, name, price, quantity):
         basic_backend.update_item(name, price, quantity)

@@ -6,22 +6,42 @@ __credits__ = ["Silvia Nittel"]
 
 import mvc_exceptions as mvc_exc
 import csv
+import os
+import sys
 
+filename = "current_inv.txt"
 item_type = "product"
 
 # Function reads specified file and outputs a list ##
 def read_inv():
-    with open("current_inv.txt", 'r') as file:
-        items = []
-        temp = csv.DictReader(file)
-        for row in temp:
-            items.append(row)
+    # os.remove(filename) # For testing exceptions
+    try:
+        with open(filename, 'r') as file:
+            items = []
+            temp = csv.DictReader(file)
+            for row in temp:
+                items.append(row)
+                pass
+
+        try:
+            if len(items) == 0:
+                msg = "Inventory file {} is empty. \n ** Exiting the system **".format(filename)
+                raise mvc_exc.NoItems(msg)
+        except mvc_exc.NoItems as e:
+            print(e.msg)
+            sys.exit(1)
+
+    except FileNotFoundError:
+        msg = "Inventory file {} does not exist. \n ** Exiting the system **".format(filename)
+        print(msg)
+        sys.exit(1)
+
     return items
 
 
-## Function writes list to specified file ##
+# Function writes list to specified file ##
 def write_inv(items):
-    with open("current_inv.txt", 'w', newline='') as file:
+    with open(filename, 'w', newline='') as file:
         headers = ['name', 'price', 'quantity']
         csv_file = csv.DictWriter(file, fieldnames=headers)
         csv_file.writeheader()
@@ -135,8 +155,8 @@ def main():
     #     exit()
 
     # # READ
-    # print('READ items')
-    # print(read_items())
+    print('READ items')
+    print(read_items())
     # # if we try to read an object not stored we get an ItemNotStored exception
     # print('READ meat')
     # print(read_item('meat'))
